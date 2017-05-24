@@ -29,7 +29,6 @@ add_service_files(DIRECTORY srv
   SegmentImage.srv
   ColorSegments.srv
   OpenPort.srv
-  GPSTest.srv
 )
 
 generate_messages(
