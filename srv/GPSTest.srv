@@ -2,4 +2,4 @@ float64 a
 float64 b
 ---
 Header header
-int16 c
+float64 c

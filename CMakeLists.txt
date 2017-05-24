@@ -29,7 +29,11 @@ add_service_files(DIRECTORY srv
   SegmentImage.srv
   ColorSegments.srv
   OpenPort.srv
-  GPSTest.srv
+  GPSgetPosLatitude.srv
+  GPSgetPosLongitude.srv
+  GPSgetPosX.srv
+  GPSgetPosY.srv
+  GPSsetZeroXY.srv
 )
 
 generate_messages(
