@@ -94,17 +94,8 @@ private:
 
 	// GPS:
 	//GPS gps;
-	ros::NodeHandle n;
-        bool varGPSisOpen;
-        double varGPSgetLat;
-        int varGPSgetFixStatus;
-        double varGPSgetLon;
-        bool varGPSisDataValid;
-        bool varGPSisSetZero;
-        double varGPSgetPosX;
-        double varGPSgetPosY;
-	int varGPSgetSatelitesUsed;
-	std::chrono::high_resolution_clock::time_point varGPSTimestamp;
+
+	
 
 	ros::ServiceClient clientGetPosLatitude = n.serviceClient<TAPAS::GPSgetPosLatitude>("GPSgetPosLatitude");
 	ros::ServiceClient clientGetPosLongitude = n.serviceClient<TAPAS::GPSgetPosLongitude>("GPSgetPosLongitude");
@@ -141,6 +132,19 @@ private:
 	void run();
 
 public:
+	//GPS:
+	ros::NodeHandle n;
+        bool varGPSisOpen;
+        double varGPSgetLat;
+        int varGPSgetFixStatus;
+        double varGPSgetLon;
+        bool varGPSisDataValid;
+        bool varGPSisSetZero;
+        double varGPSgetPosX;
+        double varGPSgetPosY;
+	int varGPSgetSatelitesUsed;
+	std::chrono::high_resolution_clock::time_point varGPSTimestamp;
+
 	PositionEstimation(Robot* irobot, TiXmlElement* settings);
 	virtual ~PositionEstimation();
 

@@ -335,6 +335,19 @@ add_dependencies(Camera TAPAS_gencpp)
 # region Gps -------------------------------------------------
 set(Gps_SOURCES
 	PositionEstimation/GPS/main.cpp
+	PositionEstimation/GPS/src/context.c
+	PositionEstimation/GPS/src/generate.c
+	PositionEstimation/GPS/src/generator.c
+	PositionEstimation/GPS/src/gmath.c
+	PositionEstimation/GPS/src/info.c
+	PositionEstimation/GPS/src/parse.c
+	PositionEstimation/GPS/src/parser.c
+	PositionEstimation/GPS/src/sentence.c
+	PositionEstimation/GPS/src/time.c
+	PositionEstimation/GPS/src/tok.c
+	PositionEstimation/GPS/GPS.cpp
+	Trobot/source/SerialPort.cpp
+	
 )
 
 IF( CUDA GREATER 0)

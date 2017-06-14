@@ -42,6 +42,20 @@
 
 #include "nmea/nmea.h"
 
+#include <thread>
+
+#include "ros/ros.h"
+
+#include "TAPAS/GPSInt.h"
+#include "TAPAS/GPSFloat.h"
+#include "TAPAS/GPSBool.h"
+
+#include "TAPAS/GPSgetPosLatitude.h"
+#include "TAPAS/GPSgetPosLongitude.h"
+#include "TAPAS/GPSgetPosX.h"
+#include "TAPAS/GPSgetPosY.h"
+#include "TAPAS/GPSsetZeroXY.h"
+
 #define BUFFER_SIZE 2048
 
 class Debug;
@@ -143,8 +157,33 @@ public:
 
 
 	void fakeGPSStart(double lat, double lon);
+        // ROS:
+        bool getPosLatitude(TAPAS::GPSgetPosLatitude::Request  &req, TAPAS::GPSgetPosLatitude::Response &res);
+        bool getPosLongitude(TAPAS::GPSgetPosLongitude::Request  &req, TAPAS::GPSgetPosLongitude::Response &res);
+        bool getPosX(TAPAS::GPSgetPosX::Request  &req, TAPAS::GPSgetPosX::Response &res);
+        bool getPosY(TAPAS::GPSgetPosY::Request  &req, TAPAS::GPSgetPosY::Response &res);
+        bool setZeroXY(TAPAS::GPSsetZeroXY::Request  &req, TAPAS::GPSsetZeroXY::Response &res);
 
 private:
+        ros::NodeHandle n;
+        std::thread dataThread;
+        void sendData();
+        // messages:
+        ros::Publisher GPSisOpen;
+        ros::Publisher GPSgetLat;
+        ros::Publisher GPSgetFixStatus;
+        ros::Publisher GPSgetLon;
+        ros::Publisher GPSisDataValid;
+        ros::Publisher GPSisSetZero;
+        ros::Publisher GPSgetPosX;
+        ros::Publisher GPSgetPosY;
+        // services:
+        ros::ServiceServer SRVgetPosLatitude;
+        ros::ServiceServer SRVgetPosLongitude;
+        ros::ServiceServer SRVgetPosX;
+        ros::ServiceServer SRVgetPosY;
+        ros::ServiceServer SRVsetZeroXY;
+                
 	double PosLat, PosLon;
 	double PosX, PosY;
 	double StartPosLat, StartPosLon;
