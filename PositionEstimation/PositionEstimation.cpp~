@@ -121,7 +121,10 @@ void PositionEstimation::callGPSgetPosY(const TAPAS::GPSFloat msg)
 {
     varGPSgetPosY = msg.data;
 }
-
+void PositionEstimation::callGPSgetSatelitesUsed(const TAPAS::GPSInt msg)
+{
+    varGPSgetSatelitesUsed = msg.data;
+}
 void PositionEstimation::readSettings(TiXmlElement* settings) {
 	TiXmlElement* pPositionEstimation = settings->FirstChildElement(
 			"PositionEstimation");

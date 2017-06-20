@@ -97,7 +97,7 @@ private:
 	ros::NodeHandle n;
         bool varGPSisOpen;
         double varGPSgetLat;
-        int varGPSgetFixStatus;
+        int varGPSgetFixStatus = 0;
         double varGPSgetLon;
         bool varGPSisDataValid;
         bool varGPSisSetZero;

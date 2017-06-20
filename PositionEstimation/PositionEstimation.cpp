@@ -100,6 +100,7 @@ void PositionEstimation::callGPSgetLat(const TAPAS::GPSFloat msg)
 void PositionEstimation::callGPSgetFixStatus(const TAPAS::GPSInt msg)
 {
     varGPSgetFixStatus = msg.data;
+    ROS_INFO("%s", "5");
 }
 void PositionEstimation::callGPSgetLon(const TAPAS::GPSFloat msg)
 {
