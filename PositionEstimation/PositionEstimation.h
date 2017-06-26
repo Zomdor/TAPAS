@@ -45,12 +45,13 @@
 #include <iostream>
 #include <mutex>
 
+// ROS
 #include "ros/ros.h"
-
+// ROS messages
 #include "TAPAS/GPSInt.h"
 #include "TAPAS/GPSFloat.h"
 #include "TAPAS/GPSBool.h"
-
+// ROS services
 #include "TAPAS/GPSgetPosLatitude.h"
 #include "TAPAS/GPSgetPosLongitude.h"
 #include "TAPAS/GPSgetPosX.h"
@@ -92,26 +93,36 @@ private:
 			lastEncoderTimestamp, lastGpsTimestamp, lastImuTimestamp;
 	cv::Mat state;
 
-	// GPS:
-	//GPS gps;
+	// ROS_GPS:
+        // Status variables
 	ros::NodeHandle n;
-        bool varGPSisOpen;
+        bool varGPSisOpen = false;
         double varGPSgetLat;
         int varGPSgetFixStatus = 0;
         double varGPSgetLon;
-        bool varGPSisDataValid;
-        bool varGPSisSetZero;
+        bool varGPSisDataValid = false;
+        bool varGPSisSetZero = false;
         double varGPSgetPosX;
         double varGPSgetPosY;
-	int varGPSgetSatelitesUsed;
+	int varGPSgetSatelitesUsed = 0;
 	std::chrono::high_resolution_clock::time_point varGPSTimestamp;
-
+        // Subscribers
+        ros::Subscriber subGPSisOpen;
+        ros::Subscriber subGPSgetLat;
+        ros::Subscriber subGPSgetFixStatus;
+        ros::Subscriber subGPSgetLon;
+        ros::Subscriber subGPSisDataValid;
+        ros::Subscriber subGPSisSetZero;
+        ros::Subscriber subGPSgetPosX;
+        ros::Subscriber subGPSgetPosY;
+	ros::Subscriber subGPSgetSatelitesUsed;
+        // Services
 	ros::ServiceClient clientGetPosLatitude = n.serviceClient<TAPAS::GPSgetPosLatitude>("GPSgetPosLatitude");
 	ros::ServiceClient clientGetPosLongitude = n.serviceClient<TAPAS::GPSgetPosLongitude>("GPSgetPosLongitude");
 	ros::ServiceClient clientGetPosX = n.serviceClient<TAPAS::GPSgetPosX>("GPSgetPosX");
 	ros::ServiceClient clientGetPosY = n.serviceClient<TAPAS::GPSgetPosY>("GPSgetPosY");
 	ros::ServiceClient clientSetZeroXY = n.serviceClient<TAPAS::GPSsetZeroXY>("GPSsetZeroXY");
-        
+        // Topic callbacks
         void callGPSisOpen(const TAPAS::GPSBool msg);
         void callGPSgetLat(const TAPAS::GPSFloat msg);
         void callGPSgetFixStatus(const TAPAS::GPSInt msg);

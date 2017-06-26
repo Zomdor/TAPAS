@@ -64,16 +64,16 @@ PositionEstimation::PositionEstimation(Robot* irobot, TiXmlElement* settings) :
 
 	estimationThread = std::thread(&PositionEstimation::run, this);
         
-        //ROS_GPS topics:
-        ros::Subscriber subGPSisOpen = n.subscribe("GPSisOpen", 1000, &PositionEstimation::callGPSisOpen, this);
-        ros::Subscriber subGPSgetLat = n.subscribe("GPSgetLat", 1000, &PositionEstimation::callGPSgetLat, this);
-        ros::Subscriber subGPSgetFixStatus = n.subscribe("GPSgetFixStatus", 1000, &PositionEstimation::callGPSgetFixStatus, this);
-        ros::Subscriber subGPSgetLon = n.subscribe("GPSgetLon", 1000, &PositionEstimation::callGPSgetLon, this);
-        ros::Subscriber subGPSisDataValid = n.subscribe("GPSisDataValid", 1000, &PositionEstimation::callGPSisDataValid, this);
-        ros::Subscriber subGPSisSetZero = n.subscribe("GPSisSetZero", 1000, &PositionEstimation::callGPSisSetZero, this);
-        ros::Subscriber subGPSgetPosX = n.subscribe("GPSgetPosX", 1000, &PositionEstimation::callGPSgetPosX, this);
-        ros::Subscriber subGPSgetPosY = n.subscribe("GPSgetPosY", 1000, &PositionEstimation::callGPSgetPosY, this);
-	ros::Subscriber subGPSgetSatelitesUsed = n.subscribe("GPSgetSatelitesUsed", 1000, &PositionEstimation::callGPSgetSatelitesUsed, this);
+        //ROS_GPS subscribe to topics
+        subGPSisOpen = n.subscribe("GPSisOpen", 1000, &PositionEstimation::callGPSisOpen, this);
+        subGPSgetLat = n.subscribe("GPSgetLat", 1000, &PositionEstimation::callGPSgetLat, this);
+        subGPSgetFixStatus = n.subscribe("GPSgetFixStatus", 1000, &PositionEstimation::callGPSgetFixStatus, this);
+        subGPSgetLon = n.subscribe("GPSgetLon", 1000, &PositionEstimation::callGPSgetLon, this);
+        subGPSisDataValid = n.subscribe("GPSisDataValid", 1000, &PositionEstimation::callGPSisDataValid, this);
+        subGPSisSetZero = n.subscribe("GPSisSetZero", 1000, &PositionEstimation::callGPSisSetZero, this);
+        subGPSgetPosX = n.subscribe("GPSgetPosX", 1000, &PositionEstimation::callGPSgetPosX, this);
+        subGPSgetPosY = n.subscribe("GPSgetPosY", 1000, &PositionEstimation::callGPSgetPosY, this);
+	subGPSgetSatelitesUsed = n.subscribe("GPSgetSatelitesUsed", 1000, &PositionEstimation::callGPSgetSatelitesUsed, this);
 	std::cout << "End PositionEstimation::PositionEstimation" << std::endl;
 }
 
@@ -88,44 +88,7 @@ PositionEstimation::~PositionEstimation() {
 	logGpxStream.close();
 	cout << "End ~PositionEstimation()" << endl;
 }
-void PositionEstimation::callGPSisOpen(const TAPAS::GPSBool msg)
-{
-    varGPSisOpen = msg.data;
-}
-void PositionEstimation::callGPSgetLat(const TAPAS::GPSFloat msg)
-{
-    varGPSgetLat = msg.data;
-    varGPSTimestamp = std::chrono::high_resolution_clock::now();
-}
-void PositionEstimation::callGPSgetFixStatus(const TAPAS::GPSInt msg)
-{
-    varGPSgetFixStatus = msg.data;
-    ROS_INFO("%s", "5");
-}
-void PositionEstimation::callGPSgetLon(const TAPAS::GPSFloat msg)
-{
-    varGPSgetLon = msg.data;
-}
-void PositionEstimation::callGPSisDataValid(const TAPAS::GPSBool msg)
-{
-    varGPSisDataValid = msg.data;
-}
-void PositionEstimation::callGPSisSetZero(const TAPAS::GPSBool msg)
-{
-    varGPSisSetZero = msg.data;
-}
-void PositionEstimation::callGPSgetPosX(const TAPAS::GPSFloat msg)
-{
-    varGPSgetPosX = msg.data;
-}
-void PositionEstimation::callGPSgetPosY(const TAPAS::GPSFloat msg)
-{
-    varGPSgetPosY = msg.data;
-}
-void PositionEstimation::callGPSgetSatelitesUsed(const TAPAS::GPSInt msg)
-{
-    varGPSgetSatelitesUsed = msg.data;
-}
+
 void PositionEstimation::readSettings(TiXmlElement* settings) {
 	TiXmlElement* pPositionEstimation = settings->FirstChildElement(
 			"PositionEstimation");
@@ -213,7 +176,6 @@ void PositionEstimation::readSettings(TiXmlElement* settings) {
 
 void PositionEstimation::run() {
 	try {
-                
 		while (!varGPSisOpen && parameters.runThread)
 			usleep(200);
 		while ((varGPSgetFixStatus == 1 || (fabs(varGPSgetLat) < 0.00001)
@@ -269,7 +231,7 @@ void PositionEstimation::run() {
 			long seconds = end.tv_sec - start.tv_sec;
 			long useconds = end.tv_usec - start.tv_usec;
 			long mtime = ((seconds) * 1000 + useconds / 1000.0) + 0.5;
-
+                        
 			if (mtime == 0)
 				mtime = 1;
 			if (parameters.debug == 1) {
@@ -518,10 +480,6 @@ void PositionEstimation::setZeroPosition() {
 //	KF->statePost = KF->statePre = Mat::zeros(2,1, CV_32F);
 }
 
-bool PositionEstimation::isSetZero() {
-	return varGPSisSetZero;
-}
-
 //----------------------EXTERNAL ACCESS TO MEASUREMENTS
 //CV_32SC1 2x1: left, right encoder
 cv::Mat PositionEstimation::getEncoderData(
@@ -549,16 +507,57 @@ const cv::Mat PositionEstimation::getEstimatedPosition() {
 	pe.unlock();
 	return stateCpy;
 }
+// ROS_GPS methods
+// subscriber callbacks
+void PositionEstimation::callGPSisOpen(const TAPAS::GPSBool msg)
+{
+    varGPSisOpen = msg.data;
+}
 
-//----------------------MENAGMENT OF PositionEstimation DEVICES
-//Gps
-//void PositionEstimation::openGps(std::string port) {
-//	gps.initController(port.c_str(), 9600);
-//}
+void PositionEstimation::callGPSgetLat(const TAPAS::GPSFloat msg)
+{
+    varGPSgetLat = msg.data;
+    varGPSTimestamp = std::chrono::high_resolution_clock::now();
+}
 
-//void PositionEstimation::closeGps() {
-//	gps.deinitController();
-//}
+void PositionEstimation::callGPSgetFixStatus(const TAPAS::GPSInt msg)
+{
+    varGPSgetFixStatus = msg.data;
+}
+
+void PositionEstimation::callGPSgetLon(const TAPAS::GPSFloat msg)
+{
+    varGPSgetLon = msg.data;
+}
+
+void PositionEstimation::callGPSisDataValid(const TAPAS::GPSBool msg)
+{
+    varGPSisDataValid = msg.data;
+}
+
+void PositionEstimation::callGPSisSetZero(const TAPAS::GPSBool msg)
+{
+    varGPSisSetZero = msg.data;
+}
+
+void PositionEstimation::callGPSgetPosX(const TAPAS::GPSFloat msg)
+{
+    varGPSgetPosX = msg.data;
+}
+
+void PositionEstimation::callGPSgetPosY(const TAPAS::GPSFloat msg)
+{
+    varGPSgetPosY = msg.data;
+}
+
+void PositionEstimation::callGPSgetSatelitesUsed(const TAPAS::GPSInt msg)
+{
+    varGPSgetSatelitesUsed = msg.data;
+}
+// read current topic value
+bool PositionEstimation::isSetZero() {
+	return varGPSisSetZero;
+}
 
 bool PositionEstimation::isGpsOpen() {
 	return varGPSisOpen;
@@ -571,7 +570,7 @@ int PositionEstimation::gpsGetFixStatus() {
 bool PositionEstimation::isGpsDataValid() {
 	return varGPSisDataValid;
 }
-
+// call service
 double PositionEstimation::getPosX(double longitude) {
 	TAPAS::GPSgetPosX srv;
 	srv.request.startLat = longitude;

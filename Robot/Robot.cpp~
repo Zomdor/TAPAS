@@ -103,13 +103,13 @@ bool Robot::isRobotsDriveOpen(){
 
 //----------------------MENAGMENT OF PositionEstimation DEVICES
 //Gps
-void Robot::openGps(std::string port){
+//void Robot::openGps(std::string port){
 	//positionEstimation->openGps(port);
-}
+//}
 
-void Robot::closeGps(){
+//void Robot::closeGps(){
 	//positionEstimation->closeGps();
-}
+//}
 
 bool Robot::isGpsOpen(){
 	return positionEstimation->isGpsOpen();

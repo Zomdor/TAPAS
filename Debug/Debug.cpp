@@ -22,6 +22,7 @@
 #include "../PositionEstimation/GPS/GPS.h"
 #include "../PositionEstimation/IMU/IMU.h"
 
+//ROS_GPS service
 #include "TAPAS/GPSsetZeroXY.h"
 
 using namespace cv;
