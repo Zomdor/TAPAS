@@ -95,12 +95,12 @@ private:
 	// GPS:
 	//GPS gps;
 	ros::NodeHandle n;
-        bool varGPSisOpen;
+        bool varGPSisOpen = false;
         double varGPSgetLat;
-        int varGPSgetFixStatus;
+        int varGPSgetFixStatus = 0;
         double varGPSgetLon;
-        bool varGPSisDataValid;
-        bool varGPSisSetZero;
+        bool varGPSisDataValid = false;
+        bool varGPSisSetZero = false;
         double varGPSgetPosX;
         double varGPSgetPosY;
 	int varGPSgetSatelitesUsed;
@@ -111,6 +111,16 @@ private:
 	ros::ServiceClient clientGetPosX = n.serviceClient<TAPAS::GPSgetPosX>("GPSgetPosX");
 	ros::ServiceClient clientGetPosY = n.serviceClient<TAPAS::GPSgetPosY>("GPSgetPosY");
 	ros::ServiceClient clientSetZeroXY = n.serviceClient<TAPAS::GPSsetZeroXY>("GPSsetZeroXY");
+        //ROS_GPS topics:
+        ros::Subscriber subGPSisOpen;
+        ros::Subscriber subGPSgetLat;
+        ros::Subscriber subGPSgetFixStatus;
+        ros::Subscriber subGPSgetLon;
+        ros::Subscriber subGPSisDataValid;
+        ros::Subscriber subGPSisSetZero;
+        ros::Subscriber subGPSgetPosX;
+        ros::Subscriber subGPSgetPosY;
+				ros::Subscriber subGPSgetSatelitesUsed;
         
         void callGPSisOpen(const TAPAS::GPSBool msg);
         void callGPSgetLat(const TAPAS::GPSFloat msg);

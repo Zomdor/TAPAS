@@ -1,8 +1,8 @@
 <launch>
-  <node pkg="TAPAS" name="TapasGui" type="TapasGui" args="settings.xml"/>
-  <node pkg="TAPAS" name="Camera" type="Camera"/>
-  <node pkg="TAPAS" name="MovementConstraints" type="MovementConstraints"/>
-  <node pkg="TAPAS" name="Gps" type="Gps"/>
+  <node pkg="TAPAS" name="TapasGui" type="TapasGui" args="settings.xml" output="screen"/>
+  <node pkg="TAPAS" name="Camera" type="Camera" output="screen"/>
+  <node pkg="TAPAS" name="MovementConstraints" type="MovementConstraints" output="screen"/>
+  <node pkg="TAPAS" name="Gps" type="Gps" output="screen"/>
 
   <param name="wheelCir" value="160" />
   <param name="encodersCPR" value="300" />

@@ -438,7 +438,7 @@ void GPS::sendData(){
 
       msgGetSatelitesUsed.data = this->getSatelitesUsed();
       msgGetSatelitesUsed.header.stamp = ros::Time::now();
-      msgGetSatelitesUsed.header.frame_id = "/GPSgetPosY";
+      msgGetSatelitesUsed.header.frame_id = "/GPSgetSatelitesUsed";
       
       GPSisOpen.publish(msgIsOpen);
       GPSgetLat.publish(msgGetLat);
@@ -448,6 +448,7 @@ void GPS::sendData(){
       GPSisSetZero.publish(msgIsSetZero);
       GPSgetPosX.publish(msgGetPosX);
       GPSgetPosY.publish(msgGetPosY);
+			GPSgetSatelitesUsed.publish(msgGetSatelitesUsed);
       ros::spinOnce();
 
       loop_rate.sleep();

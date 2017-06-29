@@ -65,15 +65,15 @@ PositionEstimation::PositionEstimation(Robot* irobot, TiXmlElement* settings) :
 	estimationThread = std::thread(&PositionEstimation::run, this);
         
         //ROS_GPS topics:
-        ros::Subscriber subGPSisOpen = n.subscribe("GPSisOpen", 1000, &PositionEstimation::callGPSisOpen, this);
-        ros::Subscriber subGPSgetLat = n.subscribe("GPSgetLat", 1000, &PositionEstimation::callGPSgetLat, this);
-        ros::Subscriber subGPSgetFixStatus = n.subscribe("GPSgetFixStatus", 1000, &PositionEstimation::callGPSgetFixStatus, this);
-        ros::Subscriber subGPSgetLon = n.subscribe("GPSgetLon", 1000, &PositionEstimation::callGPSgetLon, this);
-        ros::Subscriber subGPSisDataValid = n.subscribe("GPSisDataValid", 1000, &PositionEstimation::callGPSisDataValid, this);
-        ros::Subscriber subGPSisSetZero = n.subscribe("GPSisSetZero", 1000, &PositionEstimation::callGPSisSetZero, this);
-        ros::Subscriber subGPSgetPosX = n.subscribe("GPSgetPosX", 1000, &PositionEstimation::callGPSgetPosX, this);
-        ros::Subscriber subGPSgetPosY = n.subscribe("GPSgetPosY", 1000, &PositionEstimation::callGPSgetPosY, this);
-	ros::Subscriber subGPSgetSatelitesUsed = n.subscribe("GPSgetSatelitesUsed", 1000, &PositionEstimation::callGPSgetSatelitesUsed, this);
+        subGPSisOpen = n.subscribe("GPSisOpen", 1000, &PositionEstimation::callGPSisOpen, this);
+        subGPSgetLat = n.subscribe("GPSgetLat", 1000, &PositionEstimation::callGPSgetLat, this);
+        subGPSgetFixStatus = n.subscribe("GPSgetFixStatus", 1000, &PositionEstimation::callGPSgetFixStatus, this);
+        subGPSgetLon = n.subscribe("GPSgetLon", 1000, &PositionEstimation::callGPSgetLon, this);
+        subGPSisDataValid = n.subscribe("GPSisDataValid", 1000, &PositionEstimation::callGPSisDataValid, this);
+        subGPSisSetZero = n.subscribe("GPSisSetZero", 1000, &PositionEstimation::callGPSisSetZero, this);
+        subGPSgetPosX = n.subscribe("GPSgetPosX", 1000, &PositionEstimation::callGPSgetPosX, this);
+        subGPSgetPosY = n.subscribe("GPSgetPosY", 1000, &PositionEstimation::callGPSgetPosY, this);
+				subGPSgetSatelitesUsed = n.subscribe("GPSgetSatelitesUsed", 1000, &PositionEstimation::callGPSgetSatelitesUsed, this);
 	std::cout << "End PositionEstimation::PositionEstimation" << std::endl;
 }
 
@@ -100,6 +100,7 @@ void PositionEstimation::callGPSgetLat(const TAPAS::GPSFloat msg)
 void PositionEstimation::callGPSgetFixStatus(const TAPAS::GPSInt msg)
 {
     varGPSgetFixStatus = msg.data;
+		//ROS_INFO("%s", "5");
 }
 void PositionEstimation::callGPSgetLon(const TAPAS::GPSFloat msg)
 {
@@ -121,7 +122,10 @@ void PositionEstimation::callGPSgetPosY(const TAPAS::GPSFloat msg)
 {
     varGPSgetPosY = msg.data;
 }
-
+void PositionEstimation::callGPSgetSatelitesUsed(const TAPAS::GPSInt msg)
+{
+    varGPSgetSatelitesUsed = msg.data;
+}
 void PositionEstimation::readSettings(TiXmlElement* settings) {
 	TiXmlElement* pPositionEstimation = settings->FirstChildElement(
 			"PositionEstimation");
@@ -208,6 +212,16 @@ void PositionEstimation::readSettings(TiXmlElement* settings) {
 }
 
 void PositionEstimation::run() {
+
+			ROS_INFO("0: %d", varGPSisOpen);
+			ROS_INFO("1: %f", varGPSgetLat);
+			ROS_INFO("2: %d", varGPSgetFixStatus);
+			ROS_INFO("3: %f", varGPSgetLon;
+			ROS_INFO("0: %d", varGPSisDataValid);
+			ROS_INFO("1: %d", varGPSisSetZero);
+			ROS_INFO("2: %f", varGPSgetPosX);
+			ROS_INFO("3: %f", varGPSgetPosY);
+			ROS_INFO("3: %d", varGPSgetSatelitesUsed);
 	try {
                 
 		while (!varGPSisOpen && parameters.runThread)
@@ -265,7 +279,12 @@ void PositionEstimation::run() {
 			long seconds = end.tv_sec - start.tv_sec;
 			long useconds = end.tv_usec - start.tv_usec;
 			long mtime = ((seconds) * 1000 + useconds / 1000.0) + 0.5;
-
+			
+			ROS_INFO("0: %f", state.at<double>(0));
+			ROS_INFO("1: %f", state.at<double>(1));
+			ROS_INFO("2: %f", state.at<double>(2));
+			ROS_INFO("3: %f", state.at<double>(3));
+			
 			if (mtime == 0)
 				mtime = 1;
 			if (parameters.debug == 1) {

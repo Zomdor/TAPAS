@@ -1,44 +1,32 @@
-#include "ros/ros.h"
-#include "std_msgs/String.h"
-#include "std_msgs/Int16.h"
-//#include "GPS.h"
+//#include "ros/ros.h"
+
+//#include "TAPAS/GPSInt.h"
+//#include "TAPAS/GPSFloat.h"
+//#include "TAPAS/GPSBool.h"
+//
+//#include "TAPAS/GPSgetPosLatitude.h"
+//#include "TAPAS/GPSgetPosLongitude.h"
+//#include "TAPAS/GPSgetPosX.h"
+//#include "TAPAS/GPSgetPosY.h"
+//#include "TAPAS/GPSsetZeroXY.h"
 
 #include <sstream>
-s
+#include "GPS.h"
+
+//bool getPosLatitude(TAPAS::GPSgetPosLatitude::Request  &req, TAPAS::GPSgetPosLatitude::Response &res);
+//bool getPosLongitude(TAPAS::GPSgetPosLongitude::Request  &req, TAPAS::GPSgetPosLongitude::Response &res);
+//bool getPosX(TAPAS::GPSgetPosX::Request  &req, TAPAS::GPSgetPosX::Response &res);
+//bool getPosY(TAPAS::GPSgetPosY::Request  &req, TAPAS::GPSgetPosY::Response &res);
+//bool setZeroXY(TAPAS::GPSsetZeroXY::Request  &req, TAPAS::GPSsetZeroXY::Response &res);
+
 int main(int argc, char **argv)
 {
-  ros::init(argc, argv, "talker");
-  ros::NodeHandle n;
-
-  ros::Publisher chatter_pub_string = n.advertise<std_msgs::String>("chatter_string", 1000);
-  ros::Publisher chatter_pub_int = n.advertise<std_msgs::Int16>("chatter_int", 1000);
-
-  ros::Rate loop_rate(10);
-
-  int count = 0;
-  while (ros::ok())
-  {
-    std_msgs::String msg_string;
-
-    std::stringstream ss;
-    ss << "hello world " << count;
-    msg_string.data = ss.str();
-
-    ROS_INFO("%s", msg_string.data.c_str());
-
-    std_msgs::Int16 msg_int;
-    msg_int.data = 5;
-
-    ROS_INFO("%d", msg_int.data);
-
-    chatter_pub_string.publish(msg_string);
-    chatter_pub_int.publish(msg_int);
-    ros::spinOnce();
-
-    loop_rate.sleep();
-    ++count;
-  }
-
-
+  ros::init(argc, argv, "GPS_ROS");
+  
+  GPS gps;
+    
+  gps.initController("/dev/ttyACM0", 9600);
+  ros::spin();
+  
   return 0;
 }

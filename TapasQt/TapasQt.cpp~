@@ -73,8 +73,8 @@ TapasQt::TapasQt(const char* settingsFile, QWidget *parent, Qt::WFlags flags)
 	cout << "TapasQt::TapasQt end" << endl;
 
 //	cout << "Opening imu" << endl;
-	robot.openImu("/dev/robots/imu2");
-	robot.openEncoders("/dev/robots/encoders");
+//	robot.openImu("/dev/robots/imu2");
+//	robot.openEncoders("/dev/robots/encoders");
 //	cout << "Opening hokuyo" << endl;
 //	robot.openHokuyo("/dev/robots/hokuyo");
 //	cout << "Opening gps" << endl;

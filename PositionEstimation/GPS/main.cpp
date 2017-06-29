@@ -25,7 +25,7 @@ int main(int argc, char **argv)
   
   GPS gps;
     
-  gps.initController("/dev/ttyACM0", 9600);
+  gps.initController("/dev/robots/gps", 9600);
   ros::spin();
   
   return 0;
