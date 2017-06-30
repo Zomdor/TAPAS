@@ -46,13 +46,13 @@ using namespace boost;
 #define PlRd 6356752300.0
 
 GPS::GPS() {       
-        // services:
+        //ROS_GPS enable services
         SRVgetPosLatitude = n.advertiseService("GPSgetPosLatitude", &GPS::getPosLatitude, this);
         SRVgetPosLongitude = n.advertiseService("GPSgetPosLongitude", &GPS::getPosLongitude, this);
         SRVgetPosX = n.advertiseService("GPSgetPosX", &GPS::getPosX, this);
         SRVgetPosY = n.advertiseService("GPSgetPosY", &GPS::getPosY, this);
         SRVsetZeroXY = n.advertiseService("GPSsetZeroXY", &GPS::setZeroXY, this);
-        
+        //ROS_GPS new thread
         dataThread = std::thread(&GPS::sendData, this);
         
 	PosX = 0.0;
@@ -68,7 +68,15 @@ GPS::GPS() {
 }
 
 GPS::GPS(Robot* irobot) : robot(irobot) {
-        // TODO: ros init: msg, srv
+        //ROS_GPS enable services
+        SRVgetPosLatitude = n.advertiseService("GPSgetPosLatitude", &GPS::getPosLatitude, this);
+        SRVgetPosLongitude = n.advertiseService("GPSgetPosLongitude", &GPS::getPosLongitude, this);
+        SRVgetPosX = n.advertiseService("GPSgetPosX", &GPS::getPosX, this);
+        SRVgetPosY = n.advertiseService("GPSgetPosY", &GPS::getPosY, this);
+        SRVsetZeroXY = n.advertiseService("GPSsetZeroXY", &GPS::setZeroXY, this);
+        //ROS_GPS new thread
+        dataThread = std::thread(&GPS::sendData, this);
+
 	PosY = 0.0;
 	PosLat = 0.0;
 	PosLon = 0.0;
@@ -344,6 +352,7 @@ void GPS::fakeGPSStart(double lat, double lon)
 	StartPosLon = lon;
 	calculateRadius();
 }
+//ROS_GPS call services
 bool GPS::getPosLatitude(TAPAS::GPSgetPosLatitude::Request  &req, TAPAS::GPSgetPosLatitude::Response &res)
 {
     res.Lat = this->getPosLatitude(req.X);
@@ -377,8 +386,9 @@ bool GPS::setZeroXY(TAPAS::GPSsetZeroXY::Request  &req, TAPAS::GPSsetZeroXY::Res
     this->setZeroXY(req.Lat, req.Lon);
     return true;
 }
+//ROS_GPS sending data in a loop
 void GPS::sendData(){
-    // messages:
+    //ROS_GPS prepare publishers
     ros::Publisher GPSisOpen = n.advertise<TAPAS::GPSBool>("GPSisOpen", 1000);
     ros::Publisher GPSgetLat = n.advertise<TAPAS::GPSFloat>("GPSgetLat", 1000);
     ros::Publisher GPSgetFixStatus = n.advertise<TAPAS::GPSInt>("GPSgetFixStatus", 1000);
@@ -390,20 +400,20 @@ void GPS::sendData(){
     ros::Publisher GPSgetSatelitesUsed = n.advertise<TAPAS::GPSInt>("GPSgetSatelitesUsed", 1000);
     
     ros::Rate loop_rate(10);
-    
+    //ROS_GPS create ROS custom messages
     TAPAS::GPSBool msgIsOpen;
     TAPAS::GPSFloat msgGetLat;
     TAPAS::GPSInt msgGetFixStatus;
     TAPAS::GPSFloat msgGetLon;
     TAPAS::GPSBool msgIsDataValid;
     TAPAS::GPSBool msgIsSetZero;
-    
     TAPAS::GPSFloat msgGetPosX;
     TAPAS::GPSFloat msgGetPosY;	
     TAPAS::GPSInt msgGetSatelitesUsed;
     
     while (ros::ok())
     {
+      //ROS_GPS connect GPS class method to the topic
       msgIsOpen.data = this->isOpen();
       msgIsOpen.header.stamp = ros::Time::now();
       msgIsOpen.header.frame_id = "/GPSisOpen"; 
@@ -440,6 +450,7 @@ void GPS::sendData(){
       msgGetSatelitesUsed.header.stamp = ros::Time::now();
       msgGetSatelitesUsed.header.frame_id = "/GPSgetSatelitesUsed";
       
+      //ROS_GPS send new value to the topic
       GPSisOpen.publish(msgIsOpen);
       GPSgetLat.publish(msgGetLat);
       GPSgetFixStatus.publish(msgGetFixStatus);
@@ -448,7 +459,7 @@ void GPS::sendData(){
       GPSisSetZero.publish(msgIsSetZero);
       GPSgetPosX.publish(msgGetPosX);
       GPSgetPosY.publish(msgGetPosY);
-			GPSgetSatelitesUsed.publish(msgGetSatelitesUsed);
+      GPSgetSatelitesUsed.publish(msgGetSatelitesUsed);
       ros::spinOnce();
 
       loop_rate.sleep();

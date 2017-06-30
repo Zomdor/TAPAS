@@ -44,13 +44,13 @@
 #include <chrono>
 #include <iostream>
 #include <mutex>
-
+//ROS
 #include "ros/ros.h"
-
+//ROS_GPS messages
 #include "TAPAS/GPSInt.h"
 #include "TAPAS/GPSFloat.h"
 #include "TAPAS/GPSBool.h"
-
+//ROS_GPS services
 #include "TAPAS/GPSgetPosLatitude.h"
 #include "TAPAS/GPSgetPosLongitude.h"
 #include "TAPAS/GPSgetPosX.h"
@@ -92,8 +92,7 @@ private:
 			lastEncoderTimestamp, lastGpsTimestamp, lastImuTimestamp;
 	cv::Mat state;
 
-	// GPS:
-	//GPS gps;
+	//ROS_GPS handle and current values from topics
 	ros::NodeHandle n;
         bool varGPSisOpen = false;
         double varGPSgetLat;
@@ -105,13 +104,7 @@ private:
         double varGPSgetPosY;
 	int varGPSgetSatelitesUsed;
 	std::chrono::high_resolution_clock::time_point varGPSTimestamp;
-
-	ros::ServiceClient clientGetPosLatitude = n.serviceClient<TAPAS::GPSgetPosLatitude>("GPSgetPosLatitude");
-	ros::ServiceClient clientGetPosLongitude = n.serviceClient<TAPAS::GPSgetPosLongitude>("GPSgetPosLongitude");
-	ros::ServiceClient clientGetPosX = n.serviceClient<TAPAS::GPSgetPosX>("GPSgetPosX");
-	ros::ServiceClient clientGetPosY = n.serviceClient<TAPAS::GPSgetPosY>("GPSgetPosY");
-	ros::ServiceClient clientSetZeroXY = n.serviceClient<TAPAS::GPSsetZeroXY>("GPSsetZeroXY");
-        //ROS_GPS topics:
+        //ROS_GPS subscribers
         ros::Subscriber subGPSisOpen;
         ros::Subscriber subGPSgetLat;
         ros::Subscriber subGPSgetFixStatus;
@@ -120,8 +113,14 @@ private:
         ros::Subscriber subGPSisSetZero;
         ros::Subscriber subGPSgetPosX;
         ros::Subscriber subGPSgetPosY;
-				ros::Subscriber subGPSgetSatelitesUsed;
-        
+	ros::Subscriber subGPSgetSatelitesUsed;
+	//ROS_GPS services
+	ros::ServiceClient clientGetPosLatitude = n.serviceClient<TAPAS::GPSgetPosLatitude>("GPSgetPosLatitude");
+	ros::ServiceClient clientGetPosLongitude = n.serviceClient<TAPAS::GPSgetPosLongitude>("GPSgetPosLongitude");
+	ros::ServiceClient clientGetPosX = n.serviceClient<TAPAS::GPSgetPosX>("GPSgetPosX");
+	ros::ServiceClient clientGetPosY = n.serviceClient<TAPAS::GPSgetPosY>("GPSgetPosY");
+	ros::ServiceClient clientSetZeroXY = n.serviceClient<TAPAS::GPSsetZeroXY>("GPSsetZeroXY");
+	//ROS_GPS topic callbacks
         void callGPSisOpen(const TAPAS::GPSBool msg);
         void callGPSgetLat(const TAPAS::GPSFloat msg);
         void callGPSgetFixStatus(const TAPAS::GPSInt msg);

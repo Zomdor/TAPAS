@@ -21,7 +21,7 @@
 #include "../PositionEstimation/PositionEstimation.h"
 #include "../PositionEstimation/GPS/GPS.h"
 #include "../PositionEstimation/IMU/IMU.h"
-
+//ROS_GPS sesrvices
 #include "TAPAS/GPSsetZeroXY.h"
 
 using namespace cv;
@@ -59,6 +59,7 @@ const cv::Mat Debug::getEncoderData(){
 }
 
 //CV_32SC1 4x1: x, y, lat, lon position
+//ROS_GPS read position data from topics
 const cv::Mat Debug::getGpsData(){
 	Mat ret(4, 1, CV_32FC1);
 	ret.at<float>(0) = robot->positionEstimation->varGPSgetPosX;
@@ -69,6 +70,7 @@ const cv::Mat Debug::getGpsData(){
 }
 
 //1 - no fix, 2 - 2D, 3 - 3D
+//ROS_GPS PositionEstimation subscribes to GPS topics and saves current values
 int Debug::getGpsFixStatus(){
 	return robot->positionEstimation->varGPSgetFixStatus;
 }
@@ -76,7 +78,7 @@ int Debug::getGpsFixStatus(){
 int Debug::getGpsSatelitesUsed(){
 	return robot->positionEstimation->varGPSgetSatelitesUsed;
 }
-
+//ROS_GPS call GPS service
 void Debug::setGpsZeroPoint(double lat, double lon){
 	TAPAS::GPSsetZeroXY srv;
 	srv.request.Lat = robot->positionEstimation->varGPSgetLat;

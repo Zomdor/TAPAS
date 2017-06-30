@@ -43,13 +43,13 @@
 #include "nmea/nmea.h"
 
 #include <thread>
-
+//ROS
 #include "ros/ros.h"
-
+//ROS_GPS messages
 #include "TAPAS/GPSInt.h"
 #include "TAPAS/GPSFloat.h"
 #include "TAPAS/GPSBool.h"
-
+//ROS_GPS services
 #include "TAPAS/GPSgetPosLatitude.h"
 #include "TAPAS/GPSgetPosLongitude.h"
 #include "TAPAS/GPSgetPosX.h"
@@ -155,9 +155,8 @@ public:
 
 	bool isDataValid();
 
-
 	void fakeGPSStart(double lat, double lon);
-        // ROS:
+        // ROS_GPS services
         bool getPosLatitude(TAPAS::GPSgetPosLatitude::Request  &req, TAPAS::GPSgetPosLatitude::Response &res);
         bool getPosLongitude(TAPAS::GPSgetPosLongitude::Request  &req, TAPAS::GPSgetPosLongitude::Response &res);
         bool getPosX(TAPAS::GPSgetPosX::Request  &req, TAPAS::GPSgetPosX::Response &res);
@@ -165,10 +164,11 @@ public:
         bool setZeroXY(TAPAS::GPSsetZeroXY::Request  &req, TAPAS::GPSsetZeroXY::Response &res);
 
 private:
+	//ROS_GPS variables
         ros::NodeHandle n;
         std::thread dataThread;
         void sendData();
-        // messages:
+        //ROS_GPS message publishers
         ros::Publisher GPSisOpen;
         ros::Publisher GPSgetLat;
         ros::Publisher GPSgetFixStatus;
@@ -177,7 +177,7 @@ private:
         ros::Publisher GPSisSetZero;
         ros::Publisher GPSgetPosX;
         ros::Publisher GPSgetPosY;
-        // services:
+        //ROS_GPS services
         ros::ServiceServer SRVgetPosLatitude;
         ros::ServiceServer SRVgetPosLongitude;
         ros::ServiceServer SRVgetPosX;
